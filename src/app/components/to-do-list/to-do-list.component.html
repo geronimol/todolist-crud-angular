@@ -1,0 +1,55 @@
+
+<div class="container bg-dark p-5">
+    <form #taskForm="ngForm">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-3 text-right my-auto">
+
+          </div>
+          <div class="col-6">
+            <input type="text" name="title" #title="ngModel" [(ngModel)]="selectedTask.title"
+              class="form-control" placeholder="Título de la tarea...">
+          </div>
+          <div class="col-3 my-auto">
+            <button *ngIf="!editing" (click)="addTask(taskForm)" class="material-icons btn btn-primary border mx-2">add</button>
+            <div *ngIf="editing">
+              <button (click)="updateTask(taskForm)" class="material-icons btn btn-success border mx-2">save</button>
+              <button (click)="cancelEdit(taskForm)" class="material-icons btn btn-danger border mx-2">cancel</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </form>
+
+    <br>
+
+
+
+        <div class="card">
+          <div class="card-body border bg-light">
+            <h5 class="card-title">Tareas</h5>
+            <ul *ngFor="let task of tasks" class="list-group">
+              <li class="list-group-item my-1">
+                <div class="row">
+                  <div class="col-1 my-auto">
+                    <input *ngIf="!editing" type="checkbox" [checked]="task.completed" (change)="completeTask(task)">
+                  </div>
+                  <div class="col-7 my-auto text-center">
+                    <h5 class="my-auto">{{ task.title }}</h5>
+                  </div>
+                  <div class="col-4  my-auto text-right">
+                    <button (click)="editTask(task)" class="material-icons btn btn-warning border mx-2 my-1">edit</button>
+                    <button (click)="deleteTask(task._id, taskForm)" class="material-icons btn btn-danger border mx-2 my-1">delete</button>
+                   </div>
+                </div>
+
+
+              </li>
+            </ul>
+          </div>
+        </div>
+
+
+</div>
