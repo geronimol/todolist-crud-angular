@@ -46,17 +46,6 @@ export class ToDoListComponent implements OnInit {
       });
   }
 
-  editTask(task: Task) {
-    this.selectedTask = task;
-    this.editing = true;
-  }
-
-  cancelEdit(form: NgForm) {
-    this.editing = false;
-    this.getTasks();
-    this.resetForm(form);
-  }
-
   deleteTask(id: string, form: NgForm) {
     this.toDoListService.deleteTask(id)
       .subscribe(res => {
@@ -77,6 +66,17 @@ export class ToDoListComponent implements OnInit {
           $event.srcElement.checked = task.completed;
           Swal.fire({ icon: 'error', title: 'No se pudo editar la tarea. Por favor, intentelo nuevamente.' });
         });
+  }
+
+  editTask(task: Task) {
+    this.selectedTask = task;
+    this.editing = true;
+  }
+
+  cancelEdit(form: NgForm) {
+    this.editing = false;
+    this.getTasks();
+    this.resetForm(form);
   }
 
   resetForm(form?: NgForm) {
