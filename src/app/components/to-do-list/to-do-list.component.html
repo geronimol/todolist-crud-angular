@@ -1,55 +1,106 @@
-
 <div class="container bg-dark p-5">
-    <form #taskForm="ngForm">
-      <div class="form-group">
-        <div class="row">
-          <div class="col-3 text-right my-auto">
+  <form #taskForm="ngForm">
+    <div class="form-group">
+      <div class="row">
+        <!-- TASK INPUT -->
+        <div class="col-6 offset-3 animated bounceInLeft">
+          <input
+            type="text"
+            name="title"
+            #title="ngModel"
+            [(ngModel)]="selectedTask.title"
+            class="form-control"
+            placeholder="Agregar tarea..."
+            required
+          />
+        </div>
+        <!-- ADD TASK BUTTONS -->
+        <div class="col-3 my-auto">
+          <button
+            *ngIf="!editing"
+            (click)="addTask(taskForm)"
+            class="material-icons btn btn-primary border mx-2 animated heartBeat"
+            [disabled]="taskForm.invalid"
+          >
+            add
+          </button>
 
-          </div>
-          <div class="col-6">
-            <input type="text" name="title" #title="ngModel" [(ngModel)]="selectedTask.title"
-              class="form-control" placeholder="Título de la tarea...">
-          </div>
-          <div class="col-3 my-auto">
-            <button *ngIf="!editing" (click)="addTask(taskForm)" class="material-icons btn btn-primary border mx-2">add</button>
-            <div *ngIf="editing">
-              <button (click)="updateTask(taskForm)" class="material-icons btn btn-success border mx-2">save</button>
-              <button (click)="cancelEdit(taskForm)" class="material-icons btn btn-danger border mx-2">cancel</button>
-            </div>
+          <div *ngIf="editing">
+            <button
+              (click)="updateTask(taskForm)"
+              class="material-icons btn btn-success border mx-2"
+              [disabled]="taskForm.invalid"
+            >
+              save
+            </button>
+            <button
+              (click)="cancelEdit(taskForm)"
+              class="material-icons btn btn-danger border mx-2"
+            >
+              cancel
+            </button>
           </div>
         </div>
+      </div>
+    </div>
+  </form>
 
+  <!-- TASKS CARD -->
+  <div class="card mt-5">
+    <div class="card-body border bg-light">
+      <h5 class="card-title animated fadeIn">Tareas</h5>
+
+      <div *ngIf="tasks?.length > 0; else noTasks">
+        <ul *ngFor="let task of tasks" class="list-group">
+          <li class="list-group-item my-1">
+            <div class="row">
+              <!-- CHECKBOX -->
+              <div class="col-1 my-auto text-center">
+                <label
+                  ><input
+                    *ngIf="!editing"
+                    class="cb pristine"
+                    name="checkbox"
+                    type="checkbox"
+                    [checked]="task.completed"
+                    (change)="completeTask(task, $event)"
+                  />
+                  <span></span>
+                </label>
+              </div>
+              <!-- TASK TITLE -->
+              <div class="col-7 my-auto text-center animated fadeIn">
+                <h5 class="my-auto">{{ task.title }}</h5>
+              </div>
+              <!-- TASK BUTTONS -->
+              <div class="col-4  my-auto text-right">
+                <button
+                  (click)="editTask(task)"
+                  class="material-icons btn btn-warning border mx-2 my-1 animated tada"
+                >
+                  edit
+                </button>
+                <button
+                  class="material-icons btn btn-danger border mx-2 my-1 animated tada"
+                  [swal]="{
+                    icon: 'warning',
+                    title: 'Estás seguro que deseas eliminar esta tarea?',
+                    text: 'No podrás recuperar esta tarea.',
+                    showCancelButton: true
+                  }"
+                  (confirm)="deleteTask(task._id, taskForm)"
+                >
+                  delete
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
 
-    </form>
-
-    <br>
-
-
-
-        <div class="card">
-          <div class="card-body border bg-light">
-            <h5 class="card-title">Tareas</h5>
-            <ul *ngFor="let task of tasks" class="list-group">
-              <li class="list-group-item my-1">
-                <div class="row">
-                  <div class="col-1 my-auto">
-                    <input *ngIf="!editing" type="checkbox" [checked]="task.completed" (change)="completeTask(task)">
-                  </div>
-                  <div class="col-7 my-auto text-center">
-                    <h5 class="my-auto">{{ task.title }}</h5>
-                  </div>
-                  <div class="col-4  my-auto text-right">
-                    <button (click)="editTask(task)" class="material-icons btn btn-warning border mx-2 my-1">edit</button>
-                    <button (click)="deleteTask(task._id, taskForm)" class="material-icons btn btn-danger border mx-2 my-1">delete</button>
-                   </div>
-                </div>
-
-
-              </li>
-            </ul>
-          </div>
-        </div>
-
-
+      <ng-template #noTasks>
+        <h5 class="text-center">No hay tareas pendientes...</h5>
+      </ng-template>
+    </div>
+  </div>
 </div>

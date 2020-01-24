@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Task } from 'src/app/models/task';
 import { ToDoListService } from 'src/app/services/to-do-list.service';
 import { NgForm } from '@angular/forms';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-to-do-list',
@@ -40,6 +42,7 @@ export class ToDoListComponent implements OnInit {
         this.getTasks();
         this.editing = false;
         this.resetForm(form);
+        this.showUpdateModal();
       });
   }
 
@@ -60,15 +63,20 @@ export class ToDoListComponent implements OnInit {
         this.getTasks();
         this.resetForm(form);
         this.editing = false;
+        this.showDeleteModal();
       });
   }
 
-  completeTask(task: Task){
+  completeTask(task: Task, $event) {
     task.completed = !task.completed;
     this.toDoListService.updateTask(task)
-      .subscribe(res => {
-        console.log(res);
-      });
+      .subscribe(
+        res => { },
+        err => {
+          task.completed = !task.completed;
+          $event.srcElement.checked = task.completed;
+          Swal.fire({ icon: 'error', title: 'No se pudo editar la tarea. Por favor, intentelo nuevamente.' });
+        });
   }
 
   resetForm(form?: NgForm) {
@@ -78,4 +86,21 @@ export class ToDoListComponent implements OnInit {
     }
   }
 
+  showDeleteModal() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Tarea eliminada!',
+      showConfirmButton: false,
+      timer: 1500
+    });
+  }
+
+  showUpdateModal() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Tarea actualizada!',
+      showConfirmButton: false,
+      timer: 1500
+    });
+  }
 }
